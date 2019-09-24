@@ -1,11 +1,9 @@
 #include <iostream>
-#include <map>
 #include <vector>
 #include <locale>
 #include <wchar.h>
 #include <string.h>
-#include <codecvt>
-
+#include <utils.h>
 
 class PolybyusSquare {
 public:
@@ -23,7 +21,6 @@ public:
     }
     const std::vector<int> encrypt(const std::wstring& textToEncrypt);
     const std::wstring decrypt(const std::vector<int>& ecnryptedText);
-    const wchar_t getKeyByValue(const int value);
 
 private:
     const std::map<const wchar_t, const int> tableLetters = {
@@ -44,28 +41,13 @@ const std::vector<int> PolybyusSquare::encrypt(const std::wstring& decryptedText
     return ecryptedText;
 }
 
-const wchar_t PolybyusSquare::getKeyByValue(const int value) {
-    for (auto it : keysTable)
-        if (it.second == value)
-            return it.first;
-    return {};
-}
-
 const std::wstring PolybyusSquare::decrypt(const std::vector<int>& ecnryptedText) {
     std::wstring decryptedText{};
     for (size_t value: ecnryptedText)
-        decryptedText.push_back(getKeyByValue(value));
+        decryptedText.push_back(utils::getKeyByValue(keysTable, value));
 
     return decryptedText;
 }
-
-std::string ws2s(const std::wstring& wstr) {
-    using convert_typeX = std::codecvt_utf8<wchar_t>;
-    std::wstring_convert<convert_typeX, wchar_t> converterX;
-
-    return converterX.to_bytes(wstr);
-}
-
 
 int main() {
     std::wstring decryptedText = L"АБВГД";
@@ -74,6 +56,6 @@ int main() {
     for (auto value: encryptedText)
         std::cout << value << "\n";
 
-    std::cout << "decrypted: " << ws2s(ps.decrypt(encryptedText)) << "\n";
+    std::cout << "decrypted: " << utils::ws2s(ps.decrypt(encryptedText)) << "\n";
     return 0;
 }

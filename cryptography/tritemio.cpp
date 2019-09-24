@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
+#include <utils.h>
 #include <iterator>
 #include <tuple>
 
@@ -28,7 +28,6 @@ public:
 
     const std::vector<const int> encrypt(const std::wstring& decryptedText);
     const std::wstring decrypt(const std::vector<const int>& encrtyptedText);
-    const wchar_t getKeyByValue(const int value);
 
 private:
     const std::vector<std::tuple<const wchar_t, const int>> tableLetters = {
@@ -56,17 +55,10 @@ const std::vector<const int> Tritemio::encrypt(const std::wstring& decryptedText
 
 }
 
-const wchar_t Tritemio::getKeyByValue(const int value) {
-    for (auto it : keysTable)
-        if (it.second == value)
-            return it.first;
-    return {};
-}
-
 const std::wstring Tritemio::decrypt(const std::vector<const int>& encrtyptedText) {
     std::wstring dectypredText{}; 
     for (auto value : encrtyptedText) {
-        wchar_t key = getKeyByValue(value);
+        wchar_t key = utils::getKeyByValue(keysTable, value);
         if (key != NULL)
             dectypredText.push_back(key);
         else
