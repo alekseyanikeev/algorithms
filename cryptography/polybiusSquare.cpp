@@ -1,11 +1,10 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <locale.h>
+#include <locale>
 #include <wchar.h>
 #include <string.h>
 #include <codecvt>
-#include <locale>
 
 
 class PolybyusSquare {

@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include "utils.h"
+
 
 class Arguments {
 public:
@@ -52,6 +54,59 @@ private:
     }
 };
 
+class Belazo {
+public:
+    Belazo() = default;
+    Belazo(const std::string& key, const std::string& textToEncrypt) : _key(utils::s2ws(key)), _textToEncrypt(utils::s2ws(textToEncrypt)) {
+        wchar_t symbol = L'\u0410';
+        for (size_t i = 0; i < sizeOfAlphabet; i++)
+            uAlphabet.push_back(symbol++);
+
+        int keySize = _key.size();
+        size_t keyPosition = 0;
+        for (size_t i = 0, lengthText = _textToEncrypt.size(); i < lengthText; i++) {
+            if (!(keyPosition < keySize))
+                keyPosition = 0;
+            keys.push_back(_key.at(keyPosition++));
+        }
+
+        symbol = L'\u0410';
+        size_t endOffAlphabet = symbol + sizeOfAlphabet;
+        size_t offsetAlphabet = symbol;
+        for (size_t i = 0; i < key.size() + 1; i++) {
+            std::vector<wchar_t> row{}; 
+            for (size_t iAplhabet = 0; iAplhabet < sizeOfAlphabet; iAplhabet++) {
+                if (offsetAlphabet + iAplhabet < endOffAlphabet) {
+                    row.push_back((wchar_t)offsetAlphabet + iAplhabet);
+                }
+                else {
+                    row.push_back((wchar_t)((int)offsetAlphabet + (int)iAplhabet) - sizeOfAlphabet);
+                }
+            }
+            tableKeys.push_back(row);
+            offsetAlphabet = _key[i] + 1;
+        }
+        std::cout << "table keys: \n";
+        for (auto row : tableKeys) {
+            std::wstring rowString = {};
+            for (wchar_t symbol : row)
+                rowString.push_back(symbol);
+            std::cout << utils::ws2s(rowString) << "\n";
+        }
+    };
+
+    std::string encrypt(const std::string& text);
+    std::string decrypt(const std::string& text);
+
+private:
+    std::wstring uAlphabet{}; 
+    std::wstring _key;
+    std::wstring _textToEncrypt;
+    std::wstring keys;
+    std::vector<std::vector<wchar_t>> tableKeys;
+    const size_t sizeOfAlphabet = 32;
+};
+
 int main(int argc, char *argv[]) {
     Arguments arguments(argc, argv);
     if (arguments.key.empty() || arguments.isHelp || arguments.textToEncrypt.empty()) {
@@ -59,7 +114,7 @@ int main(int argc, char *argv[]) {
         return 0;
     } 
     else {
-        std::cout << "keys: " << arguments.key << "\ntext: " << arguments.textToEncrypt << "\n";
+        Belazo belazo(arguments.key, arguments.textToEncrypt);
     }
     return 0;
 }
