@@ -5,6 +5,7 @@
 #include "utils.h"
 
 
+
 class Arguments {
 public:
     Arguments(int argc, char *argv[], const int sizeOfArg = 5) {
