@@ -3,7 +3,7 @@
 #include <locale>
 #include <wchar.h>
 #include <string.h>
-#include <utils.h>
+#include "utils.h"
 
 class PolybyusSquare {
 public:
@@ -53,9 +53,10 @@ int main() {
     std::wstring decryptedText = L"АБВГД";
     PolybyusSquare ps;
     std::vector<int> encryptedText = ps.encrypt(decryptedText);
+    std::cout << "encrypted: " ;
     for (auto value: encryptedText)
-        std::cout << value << "\n";
+        std::cout << value << " ";
 
-    std::cout << "decrypted: " << utils::ws2s(ps.decrypt(encryptedText)) << "\n";
+    std::cout << "\ndecrypted: " << utils::ws2s(ps.decrypt(encryptedText)) << "\n";
     return 0;
 }
